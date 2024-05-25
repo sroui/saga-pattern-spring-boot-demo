@@ -1,6 +1,8 @@
 package com.appsdeveloperblog.orders.service;
 
 import com.appsdeveloperblog.core.dto.Order;
+import com.appsdeveloperblog.core.dto.events.OrderApprovedEvent;
+import com.appsdeveloperblog.core.dto.events.OrderCreatedEvent;
 import com.appsdeveloperblog.core.types.OrderStatus;
 import com.appsdeveloperblog.orders.dao.jpa.entity.OrderEntity;
 import com.appsdeveloperblog.orders.dao.jpa.repository.OrderRepository;
@@ -26,16 +28,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void placeOrder(Order order) {
-        order.setStatus(OrderStatus.CREATED);
         OrderEntity orderEntity = new OrderEntity();
         BeanUtils.copyProperties(order, orderEntity);
         orderRepository.save(orderEntity);
 
-        order.getProduct().setCustomerId(order.getCustomerId());
-        order.setId(orderEntity.getId());
-        order.getProduct().setOrderId(orderEntity.getId());
-
-        kafkaTemplate.send(ordersEventsTopicName, order);
+        var placedOrder = new OrderCreatedEvent(orderEntity.getId(), orderEntity.getCustomerId(), order.getProductId());
+        kafkaTemplate.send(ordersEventsTopicName, placedOrder);
     }
 
     @Override
@@ -45,8 +43,7 @@ public class OrderServiceImpl implements OrderService {
         orderEntity.setStatus(OrderStatus.APPROVED);
         orderRepository.save(orderEntity);
 
-        Order order = new Order();
-        BeanUtils.copyProperties(orderEntity, order);
-        kafkaTemplate.send(ordersEventsTopicName, order);
+        OrderApprovedEvent orderApprovedEvent = new OrderApprovedEvent(orderId);
+        kafkaTemplate.send(ordersEventsTopicName, orderApprovedEvent);
     }
 }

@@ -1,6 +1,7 @@
 package com.appsdeveloperblog.payments.service;
 
 import com.appsdeveloperblog.core.dto.Payment;
+import com.appsdeveloperblog.core.dto.events.PaymentProcessedEvent;
 import com.appsdeveloperblog.payments.dao.jpa.entity.PaymentEntity;
 import com.appsdeveloperblog.payments.dao.jpa.repository.PaymentRepository;
 import org.springframework.beans.BeanUtils;
@@ -31,11 +32,15 @@ public class PaymentServiceImpl implements PaymentService {
             PaymentEntity paymentEntity = new PaymentEntity();
             BeanUtils.copyProperties(payment, paymentEntity);
             paymentRepository.save(paymentEntity);
-            payment.setId(paymentEntity.getId());
 
-            kafkaTemplate.send(paymentsEventsTopicName, payment);
+            var paymentProcessedEvent = new PaymentProcessedEvent(
+                    paymentEntity.getId(),
+                    paymentEntity.getOrderId(),
+                    paymentEntity.getCustomerId(),
+                    payment.getProductId());
+            kafkaTemplate.send(paymentsEventsTopicName, paymentProcessedEvent);
         } else {
-            // todo
+            // todo send payment failed event
         }
     }
 
@@ -46,10 +51,8 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<Payment> findAll() {
-        return paymentRepository.findAll().stream().map(entity -> {
-            Payment payment = new Payment();
-            BeanUtils.copyProperties(entity, payment);
-            return payment;
-        }).collect(Collectors.toList());
+        return paymentRepository.findAll().stream().map(entity -> new Payment(
+                entity.getId(), entity.getOrderId(), entity.getCustomerId(), entity.getProductId(), entity.getAmount())
+        ).collect(Collectors.toList());
     }
 }

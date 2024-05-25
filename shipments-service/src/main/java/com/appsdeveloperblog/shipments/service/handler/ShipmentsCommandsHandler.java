@@ -1,7 +1,7 @@
 package com.appsdeveloperblog.shipments.service.handler;
 
-import com.appsdeveloperblog.core.dto.ShipmentCommand;
-import com.appsdeveloperblog.core.types.ShipmentCommandType;
+import com.appsdeveloperblog.core.dto.Shipment;
+import com.appsdeveloperblog.core.dto.commands.CreateShipmentTicketCommand;
 import com.appsdeveloperblog.shipments.service.ShipmentService;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,9 +18,8 @@ public class ShipmentsCommandsHandler {
     }
 
     @KafkaHandler
-    public void handleCommand(@Payload ShipmentCommand command) {
-        if (command.getType().equals(ShipmentCommandType.CREATE_SHIPMENT_TICKET)) {
-            shipmentService.createTicket(command.getShipment());
-        }
+    public void handleCommand(@Payload CreateShipmentTicketCommand command) {
+        var shipment = new Shipment(null, command.getOrderId(), command.getProductId(), command.getCustomerId());
+        shipmentService.createTicket(shipment);
     }
 }

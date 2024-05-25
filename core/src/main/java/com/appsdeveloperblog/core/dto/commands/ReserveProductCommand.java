@@ -1,18 +1,18 @@
-package com.appsdeveloperblog.core.dto;
+package com.appsdeveloperblog.core.dto.commands;
 
 import java.math.BigDecimal;
 
-public class Product {
+public class ReserveProductCommand {
     private Long id;
     private Long orderId;
     private Long customerId;
     private String name;
     private BigDecimal price;
 
-    public Product() {
+    public ReserveProductCommand() {
     }
 
-    public Product(Long id, Long orderId, Long customerId, String name, BigDecimal price) {
+    public ReserveProductCommand(Long id, Long orderId, Long customerId, String name, BigDecimal price) {
         this.id = id;
         this.orderId = orderId;
         this.customerId = customerId;
@@ -28,16 +28,16 @@ public class Product {
         return orderId;
     }
 
+    public Long getCustomerId() {
+        return customerId;
+    }
+
     public String getName() {
         return name;
     }
 
     public BigDecimal getPrice() {
         return price;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
     }
 
     public void setId(Long id) {

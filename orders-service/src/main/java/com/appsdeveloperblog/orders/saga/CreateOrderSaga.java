@@ -1,8 +1,14 @@
 package com.appsdeveloperblog.orders.saga;
 
-import com.appsdeveloperblog.core.dto.*;
-import com.appsdeveloperblog.core.types.*;
-import com.appsdeveloperblog.orders.service.OrderService;
+import com.appsdeveloperblog.core.dto.Product;
+import com.appsdeveloperblog.core.dto.commands.ApproveOrderCommand;
+import com.appsdeveloperblog.core.dto.commands.CreateShipmentTicketCommand;
+import com.appsdeveloperblog.core.dto.commands.ProcessPaymentCommand;
+import com.appsdeveloperblog.core.dto.commands.ReserveProductCommand;
+import com.appsdeveloperblog.core.dto.events.OrderCreatedEvent;
+import com.appsdeveloperblog.core.dto.events.PaymentProcessedEvent;
+import com.appsdeveloperblog.core.dto.events.ProductReservedEvent;
+import com.appsdeveloperblog.core.dto.events.ShipmentTicketCreatedEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaHandler;
@@ -11,7 +17,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Component
 @KafkaListener(topics = {
@@ -19,73 +25,47 @@ import java.time.LocalDateTime;
         "${products.events.topic.name}",
         "${payments.events.topic.name}",
         "${shipments.events.topic.name}",
-        "${orders.commands.topic.name}"
 })
 public class CreateOrderSaga {
     @Autowired
-    private OrderService orderService;
-    @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
-    @Value("${orders.commands.topic.name}")
-    private String ordersCommandsTopicName;
     @Value("${products.commands.topic.name}")
     private String productsCommandsTopicName;
     @Value("${payments.commands.topic.name}")
     private String paymentsCommandsTopicName;
     @Value("${shipments.commands.topic.name}")
     private String shipmentsCommandsTopicName;
+    @Value("${orders.commands.topic.name}")
+    private String ordersCommandsTopicName;
 
     @KafkaHandler
-    public void handleEvent(@Payload Order order) {
-        if (order.getStatus().equals(OrderStatus.CREATED)) {
-            ProductCommand command = new ProductCommand();
-            command.setType(ProductCommandType.RESERVE_PRODUCT);
-            command.setCreatedAt(LocalDateTime.now());
-            command.setProduct(order.getProduct());
-            kafkaTemplate.send(productsCommandsTopicName, command);
-        }
+    public void handleEvent(@Payload OrderCreatedEvent event) {
+        var price = new BigDecimal(30); // we could communicate with a service to fetch product data
+        var productName = "shampoo"; // we could communicate with a service to fetch product data
+        var product = new Product(event.getProductId(), event.getOrderId(), event.getCustomerId(), productName, price);
+
+        var command = new ReserveProductCommand(
+                product.getId(), product.getOrderId(), product.getCustomerId(), product.getName(), product.getPrice());
+        kafkaTemplate.send(productsCommandsTopicName, command);
     }
 
     @KafkaHandler
-    public void handleEvent(@Payload Product product) {
-        Payment payment = new Payment();
-        payment.setOrderId(product.getOrderId());
-        payment.setProductId(product.getId());
-        payment.setCustomerId(product.getCustomerId());
-        payment.setAmount(product.getPrice());
-        PaymentCommand command = new PaymentCommand();
-        command.setPayment(payment);
-        command.setCreatedAt(LocalDateTime.now());
-        command.setType(PaymentCommandType.PROCESS_PAYMENT);
+    public void handleEvent(@Payload ProductReservedEvent event) {
+        var command = new ProcessPaymentCommand(
+                event.getProductId(), event.getOrderId(), event.getCustomerId(), event.getProductPrice());
         kafkaTemplate.send(paymentsCommandsTopicName, command);
     }
 
     @KafkaHandler
-    public void handleEvent(@Payload Payment payment) {
-        Shipment shipment = new Shipment();
-        shipment.setOrderId(payment.getOrderId());
-        shipment.setCustomerId(payment.getCustomerId());
-        shipment.setProductId(payment.getProductId());
-        ShipmentCommand command = new ShipmentCommand();
-        command.setType(ShipmentCommandType.CREATE_SHIPMENT_TICKET);
-        command.setCreatedAt(LocalDateTime.now());
-        command.setShipment(shipment);
+    public void handleEvent(@Payload PaymentProcessedEvent event) {
+        CreateShipmentTicketCommand command =
+                new CreateShipmentTicketCommand(event.getOrderId(), event.getCustomerId(), event.getProductId());
         kafkaTemplate.send(shipmentsCommandsTopicName, command);
     }
 
     @KafkaHandler
-    public void handleEvent(@Payload Shipment shipment) {
-        OrderCommand command = new OrderCommand();
-        command.setType(OrderCommandType.APPROVE_ORDER);
-        command.setCreatedAt(LocalDateTime.now());
-        command.setOrderId(shipment.getOrderId());
+    public void handleEvent(@Payload ShipmentTicketCreatedEvent event) {
+        ApproveOrderCommand command = new ApproveOrderCommand(event.getOrderId());
         kafkaTemplate.send(ordersCommandsTopicName, command);
-    }
-
-    @KafkaHandler
-    public void handleCommand(@Payload OrderCommand orderCommand) {
-        if (orderCommand.getType().equals(OrderCommandType.APPROVE_ORDER)) {
-            orderService.approveOrder(orderCommand.getOrderId());
-        }
     }
 }

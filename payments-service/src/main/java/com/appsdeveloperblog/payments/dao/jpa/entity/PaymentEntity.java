@@ -14,8 +14,18 @@ public class PaymentEntity {
     private Long customerId;
     @Column(name = "order_id")
     private Long orderId;
+    @Column(name = "product_id")
+    private Long productId;
     @Column(name = "amount")
     private BigDecimal amount;
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
 
     public Long getOrderId() {
         return orderId;

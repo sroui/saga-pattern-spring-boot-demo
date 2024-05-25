@@ -1,6 +1,7 @@
 package com.appsdeveloperblog.products.service;
 
 import com.appsdeveloperblog.core.dto.Product;
+import com.appsdeveloperblog.core.dto.events.ProductReservedEvent;
 import com.appsdeveloperblog.products.dao.jpa.entity.ProductEntity;
 import com.appsdeveloperblog.products.dao.jpa.repository.ProductRepository;
 import org.springframework.beans.BeanUtils;
@@ -30,17 +31,16 @@ public class ProductServiceImpl implements ProductService {
         ProductEntity productEntity = new ProductEntity();
         BeanUtils.copyProperties(product, productEntity);
         productRepository.save(productEntity);
-        product.setId(productEntity.getId());
 
-        kafkaTemplate.send(productEventsTopicName, product);
+        var productReservedEvent = new ProductReservedEvent(
+                productEntity.getId(), productEntity.getOrderId(), productEntity.getCustomerId(), productEntity.getPrice());
+        kafkaTemplate.send(productEventsTopicName, productReservedEvent);
     }
 
     @Override
     public List<Product> findAll() {
-        return productRepository.findAll().stream().map(entity -> {
-            Product product = new Product();
-            BeanUtils.copyProperties(entity, product);
-            return product;
-        }).collect(Collectors.toList());
+        return productRepository.findAll().stream().map(entity -> new Product(
+                entity.getId(), entity.getOrderId(), entity.getCustomerId(), entity.getName(), entity.getPrice())
+        ).collect(Collectors.toList());
     }
 }

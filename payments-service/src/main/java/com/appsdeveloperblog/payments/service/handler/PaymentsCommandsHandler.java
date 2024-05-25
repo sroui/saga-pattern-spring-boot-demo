@@ -1,7 +1,7 @@
 package com.appsdeveloperblog.payments.service.handler;
 
-import com.appsdeveloperblog.core.dto.PaymentCommand;
-import com.appsdeveloperblog.core.types.PaymentCommandType;
+import com.appsdeveloperblog.core.dto.Payment;
+import com.appsdeveloperblog.core.dto.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.payments.service.PaymentService;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,9 +18,9 @@ public class PaymentsCommandsHandler {
     }
 
     @KafkaHandler
-    public void handleCommand(@Payload PaymentCommand command) {
-        if (command.getType().equals(PaymentCommandType.PROCESS_PAYMENT)) {
-            paymentService.process(command.getPayment());
-        }
+    public void handleCommand(@Payload ProcessPaymentCommand command) {
+        var payment = new Payment(
+                null, command.getOrderId(), command.getCustomerId(), command.getProductId(), command.getAmount());
+        paymentService.process(payment);
     }
 }

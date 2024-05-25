@@ -1,6 +1,7 @@
 package com.appsdeveloperblog.shipments.service;
 
 import com.appsdeveloperblog.core.dto.Shipment;
+import com.appsdeveloperblog.core.dto.events.ShipmentTicketCreatedEvent;
 import com.appsdeveloperblog.shipments.jpa.entity.ShipmentEntity;
 import com.appsdeveloperblog.shipments.jpa.repository.ShipmentRepository;
 import org.springframework.beans.BeanUtils;
@@ -31,9 +32,9 @@ public class ShipmentServiceImpl implements ShipmentService {
             ShipmentEntity shipmentEntity = new ShipmentEntity();
             BeanUtils.copyProperties(shipment, shipmentEntity);
             shipmentRepository.save(shipmentEntity);
-            shipment.setId(shipmentEntity.getId());
 
-            kafkaTemplate.send(shipmentsEventsTopicName, shipment);
+            var shipmentTicketCreatedEvent = new ShipmentTicketCreatedEvent(shipment.getOrderId());
+            kafkaTemplate.send(shipmentsEventsTopicName, shipmentTicketCreatedEvent);
         } else {
             // todo
         }
@@ -47,7 +48,8 @@ public class ShipmentServiceImpl implements ShipmentService {
     @Override
     public List<Shipment> findAll() {
         return shipmentRepository.findAll().stream().map(entity -> {
-            Shipment shipment = new Shipment();
+            Shipment shipment =
+                    new Shipment(entity.getId(), entity.getOrderId(), entity.getProductId(), entity.getCustomerId());
             BeanUtils.copyProperties(entity, shipment);
             return shipment;
         }).collect(Collectors.toList());

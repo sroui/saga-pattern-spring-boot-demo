@@ -1,7 +1,7 @@
 package com.appsdeveloperblog.products.service.handler;
 
-import com.appsdeveloperblog.core.dto.ProductCommand;
-import com.appsdeveloperblog.core.types.ProductCommandType;
+import com.appsdeveloperblog.core.dto.Product;
+import com.appsdeveloperblog.core.dto.commands.ReserveProductCommand;
 import com.appsdeveloperblog.products.service.ProductService;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -18,9 +18,9 @@ public class ProductCommandsHandler {
     }
 
     @KafkaHandler
-    public void handleCommand(@Payload ProductCommand command) {
-        if (command.getType().equals(ProductCommandType.RESERVE_PRODUCT)) {
-            productService.reserve(command.getProduct());
-        }
+    public void handleCommand(@Payload ReserveProductCommand command) {
+        Product product = new Product(
+                command.getId(), command.getOrderId(), command.getCustomerId(), command.getName(), command.getPrice());
+        productService.reserve(product);
     }
 }

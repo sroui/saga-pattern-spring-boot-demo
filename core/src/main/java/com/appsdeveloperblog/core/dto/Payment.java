@@ -9,43 +9,54 @@ public class Payment {
     private Long productId;
     private Long customerId;
 
-    public Long getCustomerId() {
-        return customerId;
+    public Payment() {
     }
 
-    public void setCustomerId(Long customerId) {
+    public Payment(Long id, Long orderId, Long customerId, Long productId, BigDecimal amount) {
+        this.id = id;
+        this.orderId = orderId;
+        this.amount = amount;
+        this.productId = productId;
         this.customerId = customerId;
+    }
+
+    public Long getCustomerId() {
+        return customerId;
     }
 
     public Long getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
-
     public BigDecimal getAmount() {
         return amount;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
+    }
+
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 }

@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface PaymentService {
     List<Payment> findAll();
+
     boolean isValid(Payment payment);
+
     void process(Payment payment);
 }
