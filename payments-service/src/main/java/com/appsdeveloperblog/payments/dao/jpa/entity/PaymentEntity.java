@@ -10,21 +10,21 @@ public class PaymentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "customer_id")
-    private Long customerId;
     @Column(name = "order_id")
     private Long orderId;
     @Column(name = "product_id")
     private Long productId;
-    @Column(name = "amount")
-    private BigDecimal amount;
+    @Column(name = "product_price")
+    private BigDecimal productPrice;
+    @Column(name = "product_quantity")
+    private Integer productQuantity;
 
-    public Long getProductId() {
-        return productId;
+    public Long getId() {
+        return id;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getOrderId() {
@@ -35,27 +35,27 @@ public class PaymentEntity {
         this.orderId = orderId;
     }
 
-    public BigDecimal getAmount() {
-        return amount;
+    public Long getProductId() {
+        return productId;
     }
 
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public BigDecimal getProductPrice() {
+        return productPrice;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
     }
 
-    public Long getId() {
-        return id;
+    public Integer getProductQuantity() {
+        return productQuantity;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
     }
 }

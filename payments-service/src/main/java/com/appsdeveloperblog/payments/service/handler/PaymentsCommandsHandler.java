@@ -19,8 +19,7 @@ public class PaymentsCommandsHandler {
 
     @KafkaHandler
     public void handleCommand(@Payload ProcessPaymentCommand command) {
-        var payment = new Payment(
-                null, command.getOrderId(), command.getCustomerId(), command.getProductId(), command.getAmount());
+        var payment = new Payment(command.getOrderId(), command.getProductId(), command.getProductPrice(), command.getProductQuantity());
         paymentService.process(payment);
     }
 }

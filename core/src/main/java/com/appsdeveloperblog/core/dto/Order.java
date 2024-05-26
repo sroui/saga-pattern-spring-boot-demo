@@ -1,20 +1,18 @@
 package com.appsdeveloperblog.core.dto;
 
 
-import com.appsdeveloperblog.core.types.OrderStatus;
-
 public class Order {
-    private Long id;
     private Long customerId;
     private Long productId;
+    private Integer productQuantity;
 
     public Order() {
     }
 
-    public Order(Long id, Long customerId, OrderStatus status, Long productId) {
-        this.id = id;
+    public Order(Long customerId, Long productId, Integer productQuantity) {
         this.customerId = customerId;
         this.productId = productId;
+        this.productQuantity = productQuantity;
     }
 
     public Long getProductId() {
@@ -25,19 +23,19 @@ public class Order {
         return customerId;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setCustomerId(Long customerId) {
         this.customerId = customerId;
     }
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
     }
 }

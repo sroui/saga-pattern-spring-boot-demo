@@ -33,11 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
             BeanUtils.copyProperties(payment, paymentEntity);
             paymentRepository.save(paymentEntity);
 
-            var paymentProcessedEvent = new PaymentProcessedEvent(
-                    paymentEntity.getId(),
-                    paymentEntity.getOrderId(),
-                    paymentEntity.getCustomerId(),
-                    payment.getProductId());
+            var paymentProcessedEvent = new PaymentProcessedEvent(paymentEntity.getId(), payment.getOrderId());
             kafkaTemplate.send(paymentsEventsTopicName, paymentProcessedEvent);
         } else {
             // todo send payment failed event
@@ -51,8 +47,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public List<Payment> findAll() {
-        return paymentRepository.findAll().stream().map(entity -> new Payment(
-                entity.getId(), entity.getOrderId(), entity.getCustomerId(), entity.getProductId(), entity.getAmount())
+        return paymentRepository.findAll().stream().map(entity -> new Payment(entity.getId(), entity.getOrderId(), entity.getProductId(), entity.getProductPrice(), entity.getProductQuantity())
         ).collect(Collectors.toList());
     }
 }

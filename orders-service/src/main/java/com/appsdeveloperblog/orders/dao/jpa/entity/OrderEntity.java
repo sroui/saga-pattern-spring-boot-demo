@@ -13,6 +13,11 @@ public class OrderEntity {
     private OrderStatus status;
     @Column(name = "customer_id")
     private Long customerId;
+    @Column(name = "product_id")
+    private Long productId;
+    @Column(name = "product_quantity")
+    private Integer productQuantity;
+
 
     public Long getCustomerId() {
         return customerId;
@@ -36,5 +41,21 @@ public class OrderEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
     }
 }

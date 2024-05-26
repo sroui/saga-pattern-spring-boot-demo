@@ -3,48 +3,43 @@ package com.appsdeveloperblog.core.dto;
 public class Shipment {
     private Long id;
     private Long orderId;
-    private Long productId;
-    private Long customerId;
+    private Long paymentId;
 
     public Shipment() {
     }
 
-    public Shipment(Long id, Long orderId, Long productId, Long customerId) {
+    public Shipment(Long id, Long orderId, Long paymentId) {
         this.id = id;
         this.orderId = orderId;
-        this.productId = productId;
-        this.customerId = customerId;
+        this.paymentId = paymentId;
     }
 
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public Long getProductId() {
-        return productId;
-    }
-
-    public Long getId() {
-        return id;
+    public Shipment(Long orderId, Long paymentId) {
+        this.orderId = orderId;
+        this.paymentId = paymentId;
     }
 
     public Long getOrderId() {
         return orderId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public Long getId() {
+        return id;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
     }
 }

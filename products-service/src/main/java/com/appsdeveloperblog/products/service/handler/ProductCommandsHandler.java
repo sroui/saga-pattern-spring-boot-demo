@@ -19,8 +19,7 @@ public class ProductCommandsHandler {
 
     @KafkaHandler
     public void handleCommand(@Payload ReserveProductCommand command) {
-        Product product = new Product(
-                command.getId(), command.getOrderId(), command.getCustomerId(), command.getName(), command.getPrice());
-        productService.reserve(product);
+        Product product = new Product(command.getProductId(), command.getProductQuantity());
+        productService.reserve(product, command.getOrderId());
     }
 }

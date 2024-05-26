@@ -1,62 +1,40 @@
 package com.appsdeveloperblog.core.dto.commands;
 
-import java.math.BigDecimal;
-
 public class ReserveProductCommand {
-    private Long id;
     private Long orderId;
-    private Long customerId;
-    private String name;
-    private BigDecimal price;
+    private Long productId;
+    private Integer productQuantity;
 
     public ReserveProductCommand() {
     }
 
-    public ReserveProductCommand(Long id, Long orderId, Long customerId, String name, BigDecimal price) {
-        this.id = id;
+    public ReserveProductCommand(Long orderId, Long productId, Integer productQuantity) {
         this.orderId = orderId;
-        this.customerId = customerId;
-        this.name = name;
-        this.price = price;
+        this.productId = productId;
+        this.productQuantity = productQuantity;
     }
 
-    public Long getId() {
-        return id;
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
+    }
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
     }
 
     public Long getOrderId() {
         return orderId;
     }
 
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setOrderId(Long orderId) {
         this.orderId = orderId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
     }
 }

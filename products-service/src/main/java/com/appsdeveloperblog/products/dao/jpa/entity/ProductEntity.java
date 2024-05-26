@@ -10,22 +10,12 @@ public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "customer_id")
-    private Long customerId;
-    @Column(name = "order_id")
-    private Long orderId;
+    @Column(name = "quantity")
+    private Integer quantity;
     @Column(name = "name")
     private String name;
     @Column(name = "price")
     private BigDecimal price;
-
-    public Long getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(Long orderId) {
-        this.orderId = orderId;
-    }
 
     public String getName() {
         return name;
@@ -43,19 +33,19 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
-    }
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

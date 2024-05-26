@@ -19,7 +19,7 @@ public class ShipmentsCommandsHandler {
 
     @KafkaHandler
     public void handleCommand(@Payload CreateShipmentTicketCommand command) {
-        var shipment = new Shipment(null, command.getOrderId(), command.getProductId(), command.getCustomerId());
+        var shipment = new Shipment(command.getOrderId(), command.getPaymentId());
         shipmentService.createTicket(shipment);
     }
 }

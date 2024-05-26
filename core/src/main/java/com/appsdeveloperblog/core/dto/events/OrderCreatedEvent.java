@@ -4,14 +4,16 @@ public class OrderCreatedEvent {
     private Long orderId;
     private Long customerId;
     private Long productId;
+    private Integer productQuantity;
 
     public OrderCreatedEvent() {
     }
 
-    public OrderCreatedEvent(Long orderId, Long customerId, Long productId) {
+    public OrderCreatedEvent(Long orderId, Long customerId, Long productId, Integer productQuantity) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.productId = productId;
+        this.productQuantity = productQuantity;
     }
 
     public Long getOrderId() {
@@ -36,5 +38,13 @@ public class OrderCreatedEvent {
 
     public void setProductId(Long productId) {
         this.productId = productId;
+    }
+
+    public Integer getProductQuantity() {
+        return productQuantity;
+    }
+
+    public void setProductQuantity(Integer productQuantity) {
+        this.productQuantity = productQuantity;
     }
 }

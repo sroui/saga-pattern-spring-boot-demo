@@ -6,7 +6,6 @@ import com.appsdeveloperblog.core.dto.events.OrderCreatedEvent;
 import com.appsdeveloperblog.core.types.OrderStatus;
 import com.appsdeveloperblog.orders.dao.jpa.entity.OrderEntity;
 import com.appsdeveloperblog.orders.dao.jpa.repository.OrderRepository;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -29,10 +28,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void placeOrder(Order order) {
         OrderEntity orderEntity = new OrderEntity();
-        BeanUtils.copyProperties(order, orderEntity);
+        orderEntity.setCustomerId(order.getCustomerId());
+        orderEntity.setProductId(order.getProductId());
+        orderEntity.setProductQuantity(order.getProductQuantity());
+        orderEntity.setStatus(OrderStatus.CREATED);
         orderRepository.save(orderEntity);
 
-        var placedOrder = new OrderCreatedEvent(orderEntity.getId(), orderEntity.getCustomerId(), order.getProductId());
+        var placedOrder = new OrderCreatedEvent(
+                orderEntity.getId(), orderEntity.getCustomerId(), order.getProductId(), order.getProductQuantity());
         kafkaTemplate.send(ordersEventsTopicName, placedOrder);
     }
 
