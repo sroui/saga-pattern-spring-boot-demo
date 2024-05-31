@@ -29,25 +29,28 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public void reserve(Product product, Long orderId) {
         ProductEntity productEntity = productRepository.findById(product.getId()).orElseThrow();
-        Assert.isTrue(productEntity.getQuantity() - 1 >= 0, "Not enough products to reserve");
-        productEntity.setQuantity(productEntity.getQuantity() - 1);
+        boolean enoughQuantity = productEntity.getQuantity() >= product.getQuantity();
+        Assert.isTrue(enoughQuantity, "Not enough amount to reserve product " + product.getId());
+        productEntity.setQuantity(productEntity.getQuantity() - product.getQuantity());
         productRepository.save(productEntity);
 
         var productReservedEvent =
                 new ProductReservedEvent(orderId,
-                        product.getId(),
-                        product.getPrice(),
+                        productEntity.getId(),
+                        productEntity.getPrice(),
                         product.getQuantity());
         kafkaTemplate.send(productEventsTopicName, productReservedEvent);
     }
 
     @Override
-    public void save(Product product) {
+    public Product save(Product product) {
         ProductEntity productEntity = new ProductEntity();
         productEntity.setName(product.getName());
         productEntity.setPrice(product.getPrice());
         productEntity.setQuantity(product.getQuantity());
         productRepository.save(productEntity);
+
+        return new Product(productEntity.getId(), product.getName(), product.getPrice(), product.getQuantity());
     }
 
     @Override

@@ -9,5 +9,5 @@ public interface ProductService {
 
     void reserve(Product product, Long orderId);
 
-    void save(Product product);
+    Product save(Product product);
 }

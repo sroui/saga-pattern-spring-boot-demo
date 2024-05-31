@@ -50,7 +50,7 @@ public class CreateOrderSaga {
 
     @KafkaHandler
     public void handleEvent(@Payload PaymentProcessedEvent event) {
-        CreateShipmentTicketCommand command = new CreateShipmentTicketCommand(event.getOrderId() ,event.getPaymentId());
+        CreateShipmentTicketCommand command = new CreateShipmentTicketCommand(event.getOrderId(), event.getPaymentId());
         kafkaTemplate.send(shipmentsCommandsTopicName, command);
     }
 

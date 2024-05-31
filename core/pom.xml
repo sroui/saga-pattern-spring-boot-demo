@@ -6,6 +6,12 @@
 
     <artifactId>core</artifactId>
     <version>1.0.0</version>
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+    </dependencies>
 
     <parent>
         <groupId>com.appsdeveloperblog</groupId>

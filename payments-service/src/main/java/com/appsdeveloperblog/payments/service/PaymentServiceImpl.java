@@ -33,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
             BeanUtils.copyProperties(payment, paymentEntity);
             paymentRepository.save(paymentEntity);
 
-            var paymentProcessedEvent = new PaymentProcessedEvent(paymentEntity.getId(), payment.getOrderId());
+            var paymentProcessedEvent = new PaymentProcessedEvent(payment.getOrderId(), paymentEntity.getId());
             kafkaTemplate.send(paymentsEventsTopicName, paymentProcessedEvent);
         } else {
             // todo send payment failed event
