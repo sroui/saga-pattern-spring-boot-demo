@@ -1,23 +1,31 @@
-package com.appsdeveloperblog.core.dto.commands;
+package com.appsdeveloperblog.orders.dto;
 
 import java.util.UUID;
 
-public class ReserveProductCommand {
-    private UUID orderId;
+public class CreateOrderRequest {
+    private UUID customerId;
     private UUID productId;
     private Integer productQuantity;
 
-    public ReserveProductCommand() {
+    public CreateOrderRequest() {
     }
 
-    public ReserveProductCommand(UUID orderId, UUID productId, Integer productQuantity) {
-        this.orderId = orderId;
+    public CreateOrderRequest(UUID customerId, UUID productId, Integer productQuantity) {
+        this.customerId = customerId;
         this.productId = productId;
         this.productQuantity = productQuantity;
     }
 
     public UUID getProductId() {
         return productId;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(UUID customerId) {
+        this.customerId = customerId;
     }
 
     public void setProductId(UUID productId) {
@@ -30,13 +38,5 @@ public class ReserveProductCommand {
 
     public void setProductQuantity(Integer productQuantity) {
         this.productQuantity = productQuantity;
-    }
-
-    public UUID getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(UUID orderId) {
-        this.orderId = orderId;
     }
 }

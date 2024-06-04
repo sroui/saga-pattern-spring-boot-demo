@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void reserve(Product product, Long orderId) {
+    public void reserve(Product product, UUID orderId) {
         ProductEntity productEntity = productRepository.findById(product.getId()).orElseThrow();
         boolean enoughQuantity = productEntity.getQuantity() >= product.getQuantity();
         Assert.isTrue(enoughQuantity, "Not enough amount to reserve product " + product.getId());

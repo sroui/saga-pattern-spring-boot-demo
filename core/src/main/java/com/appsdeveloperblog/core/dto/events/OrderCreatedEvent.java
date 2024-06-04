@@ -1,42 +1,44 @@
 package com.appsdeveloperblog.core.dto.events;
 
+import java.util.UUID;
+
 public class OrderCreatedEvent {
-    private Long orderId;
-    private Long customerId;
-    private Long productId;
+    private UUID orderId;
+    private UUID customerId;
+    private UUID productId;
     private Integer productQuantity;
 
     public OrderCreatedEvent() {
     }
 
-    public OrderCreatedEvent(Long orderId, Long customerId, Long productId, Integer productQuantity) {
+    public OrderCreatedEvent(UUID orderId, UUID customerId, UUID productId, Integer productQuantity) {
         this.orderId = orderId;
         this.customerId = customerId;
         this.productId = productId;
         this.productQuantity = productQuantity;
     }
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public Long getCustomerId() {
+    public UUID getCustomerId() {
         return customerId;
     }
 
-    public Long getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 
-    public void setCustomerId(Long customerId) {
+    public void setCustomerId(UUID customerId) {
         this.customerId = customerId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(UUID productId) {
         this.productId = productId;
     }
 

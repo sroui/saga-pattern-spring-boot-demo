@@ -1,28 +1,33 @@
-package com.appsdeveloperblog.core.dto;
-
+package com.appsdeveloperblog.orders.dto;
 
 import com.appsdeveloperblog.core.types.OrderStatus;
 
 import java.util.UUID;
 
-public class Order {
+public class CreateOrderResponse {
+    private UUID orderId;
     private UUID customerId;
     private UUID productId;
     private Integer productQuantity;
     private OrderStatus status;
 
-    public Order() {
+    public CreateOrderResponse() {
     }
 
-    public Order(UUID customerId, UUID productId, Integer productQuantity, OrderStatus status) {
+    public CreateOrderResponse(UUID orderId, UUID customerId, UUID productId, Integer productQuantity, OrderStatus status) {
+        this.orderId = orderId;
         this.customerId = customerId;
         this.productId = productId;
         this.productQuantity = productQuantity;
         this.status = status;
     }
 
-    public UUID getProductId() {
-        return productId;
+    public UUID getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(UUID orderId) {
+        this.orderId = orderId;
     }
 
     public UUID getCustomerId() {
@@ -51,5 +56,9 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public UUID getProductId() {
+        return productId;
     }
 }

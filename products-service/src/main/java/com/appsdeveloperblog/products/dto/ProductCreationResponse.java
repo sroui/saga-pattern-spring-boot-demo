@@ -1,25 +1,25 @@
-package com.appsdeveloperblog.core.dto;
+package com.appsdeveloperblog.products.dto;
 
 import java.math.BigDecimal;
 import java.util.UUID;
 
-public class Product {
+public class ProductCreationResponse {
     private UUID id;
     private String name;
     private BigDecimal price;
     private Integer quantity;
 
-    public Product() {
+    public ProductCreationResponse() {
     }
 
-    public Product(UUID id, String name, BigDecimal price, Integer quantity) {
+    public ProductCreationResponse(UUID id, String name, BigDecimal price, Integer quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.quantity = quantity;
     }
 
-    public Product(UUID productId, Integer quantity) {
+    public ProductCreationResponse(UUID productId, Integer quantity) {
         this.id = productId;
         this.quantity = quantity;
     }

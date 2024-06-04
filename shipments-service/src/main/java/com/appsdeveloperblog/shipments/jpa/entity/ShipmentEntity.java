@@ -2,38 +2,40 @@ package com.appsdeveloperblog.shipments.jpa.entity;
 
 import jakarta.persistence.*;
 
+import java.util.UUID;
+
 @Table(name = "shipments")
 @Entity
 public class ShipmentEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column(name = "order_id")
-    private Long orderId;
+    private UUID orderId;
     @Column(name = "payment_id")
-    private Long paymentId;
+    private UUID paymentId;
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Long getPaymentId() {
+    public UUID getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(Long paymentId) {
+    public void setPaymentId(UUID paymentId) {
         this.paymentId = paymentId;
     }
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 }

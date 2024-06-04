@@ -1,20 +1,22 @@
 package com.appsdeveloperblog.core.dto.commands;
 
+import java.util.UUID;
+
 public class ApproveOrderCommand {
-    private Long orderId;
+    private UUID orderId;
 
     public ApproveOrderCommand() {
     }
 
-    public ApproveOrderCommand(Long orderId) {
+    public ApproveOrderCommand(UUID orderId) {
         this.orderId = orderId;
     }
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 }

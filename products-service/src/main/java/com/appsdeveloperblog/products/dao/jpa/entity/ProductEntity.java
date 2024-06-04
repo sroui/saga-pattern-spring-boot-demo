@@ -3,13 +3,14 @@ package com.appsdeveloperblog.products.dao.jpa.entity;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Table(name = "products")
 @Entity
 public class ProductEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
     @Column(name = "quantity")
     private Integer quantity;
     @Column(name = "name")
@@ -33,11 +34,11 @@ public class ProductEntity {
         this.price = price;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

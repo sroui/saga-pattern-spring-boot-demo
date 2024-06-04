@@ -11,6 +11,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.util.UUID;
+
 @Service
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
@@ -26,21 +28,23 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void placeOrder(Order order) {
-        OrderEntity orderEntity = new OrderEntity();
-        orderEntity.setCustomerId(order.getCustomerId());
-        orderEntity.setProductId(order.getProductId());
-        orderEntity.setProductQuantity(order.getProductQuantity());
-        orderEntity.setStatus(OrderStatus.CREATED);
-        orderRepository.save(orderEntity);
+    public Order placeOrder(Order order) {
+        OrderEntity entity = new OrderEntity();
+        entity.setCustomerId(order.getCustomerId());
+        entity.setProductId(order.getProductId());
+        entity.setProductQuantity(order.getProductQuantity());
+        entity.setStatus(OrderStatus.CREATED);
+        orderRepository.save(entity);
 
         var placedOrder = new OrderCreatedEvent(
-                orderEntity.getId(), orderEntity.getCustomerId(), order.getProductId(), order.getProductQuantity());
+                entity.getId(), entity.getCustomerId(), order.getProductId(), order.getProductQuantity());
         kafkaTemplate.send(ordersEventsTopicName, placedOrder);
+
+        return new Order(entity.getId(), entity.getProductId(), entity.getProductQuantity(), entity.getStatus());
     }
 
     @Override
-    public void approveOrder(Long orderId) {
+    public void approveOrder(UUID orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
         Assert.notNull(orderEntity, "no order found with id " + orderEntity + " in the database");
         orderEntity.setStatus(OrderStatus.APPROVED);

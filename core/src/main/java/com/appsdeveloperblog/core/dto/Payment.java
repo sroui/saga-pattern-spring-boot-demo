@@ -1,18 +1,19 @@
 package com.appsdeveloperblog.core.dto;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class Payment {
-    private Long id;
-    private Long orderId;
-    private Long productId;
+    private UUID id;
+    private UUID orderId;
+    private UUID productId;
     private BigDecimal productPrice;
     private Integer productQuantity;
 
     public Payment() {
     }
 
-    public Payment(Long id, Long orderId, Long productId, BigDecimal productPrice, Integer productQuantity) {
+    public Payment(UUID id, UUID orderId, UUID productId, BigDecimal productPrice, Integer productQuantity) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
@@ -21,34 +22,34 @@ public class Payment {
     }
 
 
-    public Payment(Long orderId, Long productId, BigDecimal productPrice, Integer productQuantity) {
+    public Payment(UUID orderId, UUID productId, BigDecimal productPrice, Integer productQuantity) {
         this.orderId = orderId;
         this.productId = productId;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 
-    public Long getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(UUID productId) {
         this.productId = productId;
     }
 

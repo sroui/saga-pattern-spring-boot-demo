@@ -1,30 +1,32 @@
 package com.appsdeveloperblog.core.dto.events;
 
+import java.util.UUID;
+
 public class PaymentProcessedEvent {
-    private Long orderId;
-    private Long paymentId;
+    private UUID orderId;
+    private UUID paymentId;
 
     public PaymentProcessedEvent() {
     }
 
-    public PaymentProcessedEvent(Long orderId, Long paymentId) {
+    public PaymentProcessedEvent(UUID orderId, UUID paymentId) {
         this.orderId = orderId;
         this.paymentId = paymentId;
     }
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 
-    public Long getPaymentId() {
+    public UUID getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(Long paymentId) {
+    public void setPaymentId(UUID paymentId) {
         this.paymentId = paymentId;
     }
 }

@@ -1,36 +1,37 @@
 package com.appsdeveloperblog.core.dto.commands;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class ProcessPaymentCommand {
-    private Long orderId;
-    private Long productId;
+    private UUID orderId;
+    private UUID productId;
     private BigDecimal productPrice;
     private Integer productQuantity;
 
     public ProcessPaymentCommand() {
     }
 
-    public ProcessPaymentCommand(Long orderId, Long productId, BigDecimal productPrice, Integer productQuantity) {
+    public ProcessPaymentCommand(UUID orderId, UUID productId, BigDecimal productPrice, Integer productQuantity) {
         this.productId = productId;
         this.orderId = orderId;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
     }
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 
-    public Long getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(UUID productId) {
         this.productId = productId;
     }
 

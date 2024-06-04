@@ -1,36 +1,37 @@
 package com.appsdeveloperblog.core.dto.events;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class ProductReservedEvent {
-    private Long orderId;
-    private Long productId;
+    private UUID orderId;
+    private UUID productId;
     private BigDecimal productPrice;
     private Integer productQuantity;
 
     public ProductReservedEvent() {
     }
 
-    public ProductReservedEvent(Long orderId, Long productId, BigDecimal productPrice, Integer productQuantity) {
+    public ProductReservedEvent(UUID orderId, UUID productId, BigDecimal productPrice, Integer productQuantity) {
         this.orderId = orderId;
         this.productId = productId;
         this.productPrice = productPrice;
         this.productQuantity = productQuantity;
     }
 
-    public Long getOrderId() {
+    public UUID getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(UUID orderId) {
         this.orderId = orderId;
     }
 
-    public Long getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(UUID productId) {
         this.productId = productId;
     }
 

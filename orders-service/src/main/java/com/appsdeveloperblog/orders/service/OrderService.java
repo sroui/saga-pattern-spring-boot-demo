@@ -2,8 +2,10 @@ package com.appsdeveloperblog.orders.service;
 
 import com.appsdeveloperblog.core.dto.Order;
 
-public interface OrderService {
-    void placeOrder(Order order);
+import java.util.UUID;
 
-    void approveOrder(Long orderId);
+public interface OrderService {
+    Order placeOrder(Order order);
+
+    void approveOrder(UUID orderId);
 }
