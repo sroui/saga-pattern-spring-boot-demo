@@ -40,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
                 entity.getId(), entity.getCustomerId(), order.getProductId(), order.getProductQuantity());
         kafkaTemplate.send(ordersEventsTopicName, placedOrder);
 
-        return new Order(entity.getId(), entity.getProductId(), entity.getProductQuantity(), entity.getStatus());
+        return new Order(entity.getId(), entity.getCustomerId(), entity.getProductId(), entity.getProductQuantity(), entity.getStatus());
     }
 
     @Override
