@@ -4,10 +4,9 @@ import com.appsdeveloperblog.core.dto.commands.ApproveOrderCommand;
 import com.appsdeveloperblog.core.dto.commands.CreateShipmentTicketCommand;
 import com.appsdeveloperblog.core.dto.commands.ProcessPaymentCommand;
 import com.appsdeveloperblog.core.dto.commands.ReserveProductCommand;
-import com.appsdeveloperblog.core.dto.events.OrderCreatedEvent;
-import com.appsdeveloperblog.core.dto.events.PaymentProcessedEvent;
-import com.appsdeveloperblog.core.dto.events.ProductReservedEvent;
-import com.appsdeveloperblog.core.dto.events.ShipmentTicketCreatedEvent;
+import com.appsdeveloperblog.core.dto.events.*;
+import com.appsdeveloperblog.core.types.OrderStatus;
+import com.appsdeveloperblog.orders.service.OrderHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaHandler;
@@ -25,6 +24,8 @@ import org.springframework.stereotype.Component;
 })
 public class CreateOrderSaga {
     @Autowired
+    private OrderHistoryService orderHistoryService;
+    @Autowired
     private KafkaTemplate<String, Object> kafkaTemplate;
     @Value("${products.commands.topic.name}")
     private String productsCommandsTopicName;
@@ -39,6 +40,12 @@ public class CreateOrderSaga {
     public void handleEvent(@Payload OrderCreatedEvent event) {
         var command = new ReserveProductCommand(event.getOrderId(), event.getProductId(), event.getProductQuantity());
         kafkaTemplate.send(productsCommandsTopicName, command);
+        orderHistoryService.add(event.getOrderId(), OrderStatus.CREATED);
+    }
+
+    @KafkaHandler
+    public void handleEvent(@Payload OrderApprovedEvent event) {
+        orderHistoryService.add(event.getOrderId(), OrderStatus.APPROVED);
     }
 
     @KafkaHandler

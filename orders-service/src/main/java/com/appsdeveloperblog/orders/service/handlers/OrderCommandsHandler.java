@@ -1,4 +1,4 @@
-package com.appsdeveloperblog.orders.service.commands;
+package com.appsdeveloperblog.orders.service.handlers;
 
 import com.appsdeveloperblog.core.dto.commands.ApproveOrderCommand;
 import com.appsdeveloperblog.orders.service.OrderService;

@@ -20,7 +20,6 @@ public class OrderEntity {
     @Column(name = "product_quantity")
     private Integer productQuantity;
 
-
     public UUID getCustomerId() {
         return customerId;
     }
