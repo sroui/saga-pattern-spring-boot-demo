@@ -23,18 +23,26 @@ import org.springframework.stereotype.Component;
         "${shipments.events.topic.name}",
 })
 public class CreateOrderSaga {
-    @Autowired
-    private OrderHistoryService orderHistoryService;
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
-    @Value("${products.commands.topic.name}")
-    private String productsCommandsTopicName;
-    @Value("${payments.commands.topic.name}")
-    private String paymentsCommandsTopicName;
-    @Value("${shipments.commands.topic.name}")
-    private String shipmentsCommandsTopicName;
-    @Value("${orders.commands.topic.name}")
-    private String ordersCommandsTopicName;
+    private final OrderHistoryService orderHistoryService;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
+    private final String productsCommandsTopicName;
+    private final String paymentsCommandsTopicName;
+    private final String shipmentsCommandsTopicName;
+    private final String ordersCommandsTopicName;
+
+    public CreateOrderSaga(OrderHistoryService orderHistoryService,
+                           KafkaTemplate<String, Object> kafkaTemplate,
+                           @Value("${products.commands.topic.name}") String productsCommandsTopicName,
+                           @Value("${payments.commands.topic.name}") String paymentsCommandsTopicName,
+                           @Value("${shipments.commands.topic.name}") String shipmentsCommandsTopicName,
+                           @Value("${orders.commands.topic.name}") String ordersCommandsTopicName) {
+        this.orderHistoryService = orderHistoryService;
+        this.kafkaTemplate = kafkaTemplate;
+        this.productsCommandsTopicName = productsCommandsTopicName;
+        this.paymentsCommandsTopicName = paymentsCommandsTopicName;
+        this.shipmentsCommandsTopicName = shipmentsCommandsTopicName;
+        this.ordersCommandsTopicName = ordersCommandsTopicName;
+    }
 
     @KafkaHandler
     public void handleEvent(@Payload OrderCreatedEvent event) {

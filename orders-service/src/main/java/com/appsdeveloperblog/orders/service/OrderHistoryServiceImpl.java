@@ -5,7 +5,6 @@ import com.appsdeveloperblog.orders.dao.jpa.entity.OrderHistoryEntity;
 import com.appsdeveloperblog.orders.dao.jpa.repository.OrderHistoryRepository;
 import com.appsdeveloperblog.orders.dto.OrderHistory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -15,8 +14,11 @@ import java.util.UUID;
 
 @Service
 public class OrderHistoryServiceImpl implements OrderHistoryService {
-    @Autowired
-    private OrderHistoryRepository orderHistoryRepository;
+    private final OrderHistoryRepository orderHistoryRepository;
+
+    public OrderHistoryServiceImpl(OrderHistoryRepository orderHistoryRepository) {
+        this.orderHistoryRepository = orderHistoryRepository;
+    }
 
     @Override
     public void add(UUID orderId, OrderStatus orderStatus) {
