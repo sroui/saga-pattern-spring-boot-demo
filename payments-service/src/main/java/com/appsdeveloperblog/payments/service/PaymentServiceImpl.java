@@ -1,48 +1,41 @@
 package com.appsdeveloperblog.payments.service;
 
 import com.appsdeveloperblog.core.dto.Payment;
-import com.appsdeveloperblog.core.dto.events.PaymentProcessedEvent;
 import com.appsdeveloperblog.payments.dao.jpa.entity.PaymentEntity;
 import com.appsdeveloperblog.payments.dao.jpa.repository.PaymentRepository;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
+    public static final String SAMPLE_CREDIT_CARD_NUMBER = "374245455400126";
     private final PaymentRepository paymentRepository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final String paymentsEventsTopicName;
+    private final CreditCardProcessorRemoteService ccpRemoteService;
 
     public PaymentServiceImpl(PaymentRepository paymentRepository,
-                              KafkaTemplate<String, Object> kafkaTemplate,
-                              @Value("${payments.events.topic.name}") String paymentsEventsTopicName) {
+                              CreditCardProcessorRemoteService ccpRemoteService) {
         this.paymentRepository = paymentRepository;
-        this.kafkaTemplate = kafkaTemplate;
-        this.paymentsEventsTopicName = paymentsEventsTopicName;
+        this.ccpRemoteService = ccpRemoteService;
     }
 
     @Override
-    public void process(Payment payment) {
-        if (isValid(payment)) {
-            PaymentEntity paymentEntity = new PaymentEntity();
-            BeanUtils.copyProperties(payment, paymentEntity);
-            paymentRepository.save(paymentEntity);
+    public Payment process(Payment payment) {
+        BigDecimal totalPrice = payment.getProductPrice()
+                .multiply(new BigDecimal(payment.getProductQuantity()));
+        ccpRemoteService.process(new BigInteger(SAMPLE_CREDIT_CARD_NUMBER), totalPrice);
+        PaymentEntity paymentEntity = new PaymentEntity();
+        BeanUtils.copyProperties(payment, paymentEntity);
+        paymentRepository.save(paymentEntity);
 
-            var paymentProcessedEvent = new PaymentProcessedEvent(payment.getOrderId(), paymentEntity.getId());
-            kafkaTemplate.send(paymentsEventsTopicName, paymentProcessedEvent);
-        } else {
-            // todo send payment failed event
-        }
-    }
-
-    @Override
-    public boolean isValid(Payment payment) {
-        return true; //todo
+        var processedPayment = new Payment();
+        BeanUtils.copyProperties(payment, processedPayment);
+        processedPayment.setId(paymentEntity.getId());
+        return processedPayment;
     }
 
     @Override

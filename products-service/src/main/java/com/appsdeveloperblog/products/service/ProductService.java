@@ -8,7 +8,9 @@ import java.util.UUID;
 public interface ProductService {
     List<Product> findAll();
 
-    void reserve(Product product, UUID orderId);
+    Product reserve(Product desiredProduct, UUID orderId);
+
+    void cancelReservation(Product undesiredProduct, UUID orderId);
 
     Product save(Product product);
 }

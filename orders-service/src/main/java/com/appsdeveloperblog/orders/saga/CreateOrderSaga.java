@@ -1,13 +1,9 @@
 package com.appsdeveloperblog.orders.saga;
 
-import com.appsdeveloperblog.core.dto.commands.ApproveOrderCommand;
-import com.appsdeveloperblog.core.dto.commands.CreateShipmentTicketCommand;
-import com.appsdeveloperblog.core.dto.commands.ProcessPaymentCommand;
-import com.appsdeveloperblog.core.dto.commands.ReserveProductCommand;
+import com.appsdeveloperblog.core.dto.commands.*;
 import com.appsdeveloperblog.core.dto.events.*;
 import com.appsdeveloperblog.core.types.OrderStatus;
 import com.appsdeveloperblog.orders.service.OrderHistoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -64,14 +60,27 @@ public class CreateOrderSaga {
     }
 
     @KafkaHandler
+    public void handleEvent(@Payload ProductReservationCanceledEvent event) {
+        var command = new RejectOrderCommand(event.getOrderId());
+        kafkaTemplate.send(ordersCommandsTopicName, command);
+        orderHistoryService.add(event.getOrderId(), OrderStatus.REJECTED);
+    }
+
+    @KafkaHandler
     public void handleEvent(@Payload PaymentProcessedEvent event) {
-        CreateShipmentTicketCommand command = new CreateShipmentTicketCommand(event.getOrderId(), event.getPaymentId());
+        var command = new CreateShipmentTicketCommand(event.getOrderId(), event.getPaymentId());
         kafkaTemplate.send(shipmentsCommandsTopicName, command);
     }
 
     @KafkaHandler
+    public void handleEvent(@Payload PaymentFailedEvent event) {
+        var command = new CancelProductReservationCommand(event.getOrderId(), event.getProductId(), event.getProductQuantity());
+        kafkaTemplate.send(productsCommandsTopicName, command);
+    }
+
+    @KafkaHandler
     public void handleEvent(@Payload ShipmentTicketCreatedEvent event) {
-        ApproveOrderCommand command = new ApproveOrderCommand(event.getOrderId());
+        var command = new ApproveOrderCommand(event.getOrderId());
         kafkaTemplate.send(ordersCommandsTopicName, command);
     }
 }

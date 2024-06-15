@@ -1,13 +1,11 @@
 package com.appsdeveloperblog.products.service;
 
 import com.appsdeveloperblog.core.dto.Product;
-import com.appsdeveloperblog.core.dto.events.ProductReservedEvent;
+import com.appsdeveloperblog.core.exceptions.ProductInsufficientQuantityException;
 import com.appsdeveloperblog.products.dao.jpa.entity.ProductEntity;
 import com.appsdeveloperblog.products.dao.jpa.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,31 +14,32 @@ import java.util.stream.Collectors;
 @Service
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final String productEventsTopicName;
 
-    public ProductServiceImpl(ProductRepository productRepository,
-                              KafkaTemplate<String, Object> kafkaTemplate,
-                              @Value("${products.events.topic.name}") String productEventsTopicName) {
+    public ProductServiceImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
-        this.kafkaTemplate = kafkaTemplate;
-        this.productEventsTopicName = productEventsTopicName;
     }
 
     @Override
-    public void reserve(Product product, UUID orderId) {
-        ProductEntity productEntity = productRepository.findById(product.getId()).orElseThrow();
-        boolean enoughQuantity = productEntity.getQuantity() >= product.getQuantity();
-        Assert.isTrue(enoughQuantity, "Not enough amount to reserve product " + product.getId());
-        productEntity.setQuantity(productEntity.getQuantity() - product.getQuantity());
+    public Product reserve(Product desiredProduct, UUID orderId) {
+        ProductEntity productEntity = productRepository.findById(desiredProduct.getId()).orElseThrow();
+        if (desiredProduct.getQuantity() > productEntity.getQuantity()) {
+            throw new ProductInsufficientQuantityException(productEntity.getId(), orderId);
+        }
+
+        productEntity.setQuantity(productEntity.getQuantity() - desiredProduct.getQuantity());
         productRepository.save(productEntity);
 
-        var productReservedEvent =
-                new ProductReservedEvent(orderId,
-                        productEntity.getId(),
-                        productEntity.getPrice(),
-                        product.getQuantity());
-        kafkaTemplate.send(productEventsTopicName, productReservedEvent);
+        var reservedProduct = new Product();
+        BeanUtils.copyProperties(productEntity, reservedProduct);
+        reservedProduct.setQuantity(desiredProduct.getQuantity());
+        return reservedProduct;
+    }
+
+    @Override
+    public void cancelReservation(Product undesiredProduct, UUID orderId) {
+        ProductEntity productEntity = productRepository.findById(undesiredProduct.getId()).orElseThrow();
+        productEntity.setQuantity(productEntity.getQuantity() + undesiredProduct.getQuantity());
+        productRepository.save(productEntity);
     }
 
     @Override
