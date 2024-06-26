@@ -1,10 +1,18 @@
 package com.appsdeveloperblog.products.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.math.BigDecimal;
 
 public class ProductCreationRequest {
+    @NotBlank
     private String name;
+    @NotNull
+    @Positive
     private BigDecimal price;
+    @Positive
     private Integer quantity;
 
     public ProductCreationRequest(String name, BigDecimal price, Integer quantity) {

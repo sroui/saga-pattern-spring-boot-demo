@@ -1,6 +1,7 @@
 package com.appsdeveloperblog.ccps.web.controller;
 
 import com.appsdeveloperblog.core.dto.CreditCardProcessRequest;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ public class CreditCardProcessorController {
 
     @PostMapping("/process")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void processCreditCard(@RequestBody CreditCardProcessRequest request) {
+    public void processCreditCard(@RequestBody @Valid CreditCardProcessRequest request) {
         LOGGER.info("Processing request: {}", request);
     }
 }
