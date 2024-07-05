@@ -34,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
         entity.setProductId(order.getProductId());
         entity.setProductQuantity(order.getProductQuantity());
         entity.setStatus(OrderStatus.CREATED);
+        entity.setId(order.getOrderId());
         orderRepository.save(entity);
 
         var placedOrder = new OrderCreatedEvent(
@@ -54,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void approveOrder(UUID orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
-        Assert.notNull(orderEntity, "no order found with id " + orderEntity + " in the database");
+        Assert.notNull(orderEntity, "no order found with id " + orderId + " in the database");
         orderEntity.setStatus(OrderStatus.APPROVED);
         orderRepository.save(orderEntity);
 
@@ -65,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void rejectOrder(UUID orderId) {
         OrderEntity orderEntity = orderRepository.findById(orderId).orElse(null);
-        Assert.notNull(orderEntity, "no order found with id " + orderEntity + " in the database");
+        Assert.notNull(orderEntity, "no order found with id " + orderId + " in the database");
         orderEntity.setStatus(OrderStatus.REJECTED);
         orderRepository.save(orderEntity);
     }

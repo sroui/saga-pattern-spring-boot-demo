@@ -7,7 +7,6 @@ import com.appsdeveloperblog.orders.dto.OrderHistoryResponse;
 import com.appsdeveloperblog.orders.service.OrderHistoryService;
 import com.appsdeveloperblog.orders.service.OrderService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
