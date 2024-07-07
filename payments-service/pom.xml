@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>payments-service</artifactId>
-    <version>1.0.0</version>
+    <version>${revision}</version>
 
     <parent>
         <groupId>com.appsdeveloperblog</groupId>
         <artifactId>saga-pattern-spring-boot-demo</artifactId>
-        <version>1.0.0</version>
+        <version>${revision}</version>
     </parent>
 
     <dependencies>
@@ -33,11 +33,6 @@
             <groupId>com.appsdeveloperblog</groupId>
             <artifactId>core</artifactId>
             <version>1.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>testcontainers</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
