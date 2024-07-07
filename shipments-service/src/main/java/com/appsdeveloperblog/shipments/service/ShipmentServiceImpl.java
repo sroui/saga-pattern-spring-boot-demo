@@ -1,11 +1,8 @@
 package com.appsdeveloperblog.shipments.service;
 
 import com.appsdeveloperblog.core.dto.Shipment;
-import com.appsdeveloperblog.core.dto.events.ShipmentTicketCreatedEvent;
 import com.appsdeveloperblog.shipments.jpa.entity.ShipmentEntity;
 import com.appsdeveloperblog.shipments.jpa.repository.ShipmentRepository;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,15 +11,9 @@ import java.util.stream.Collectors;
 @Service
 public class ShipmentServiceImpl implements ShipmentService {
     private final ShipmentRepository shipmentRepository;
-    private final KafkaTemplate<String, Object> kafkaTemplate;
-    private final String shipmentsEventsTopicName;
 
-    public ShipmentServiceImpl(ShipmentRepository shipmentRepository,
-                               KafkaTemplate<String, Object> kafkaTemplate,
-                               @Value("${shipments.events.topic.name}") String shipmentsEventsTopicName) {
+    public ShipmentServiceImpl(ShipmentRepository shipmentRepository) {
         this.shipmentRepository = shipmentRepository;
-        this.kafkaTemplate = kafkaTemplate;
-        this.shipmentsEventsTopicName = shipmentsEventsTopicName;
     }
 
     @Override
@@ -32,9 +23,6 @@ public class ShipmentServiceImpl implements ShipmentService {
             shipmentEntity.setPaymentId(shipment.getPaymentId());
             shipmentEntity.setOrderId(shipment.getOrderId());
             shipmentRepository.save(shipmentEntity);
-
-            var shipmentTicketCreatedEvent = new ShipmentTicketCreatedEvent(shipment.getOrderId());
-            kafkaTemplate.send(shipmentsEventsTopicName, shipmentTicketCreatedEvent);
         } else {
             // todo
         }

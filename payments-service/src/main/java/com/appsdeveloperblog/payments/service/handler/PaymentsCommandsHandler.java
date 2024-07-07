@@ -31,6 +31,7 @@ public class PaymentsCommandsHandler {
     @KafkaHandler
     public void handleCommand(@Payload ProcessPaymentCommand command) {
         try {
+            System.out.println("Received command: " + command.getOrderId());
             var payment = new Payment(
                     command.getOrderId(),
                     command.getProductId(),

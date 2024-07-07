@@ -4,19 +4,12 @@ import com.appsdeveloperblog.core.dto.Order;
 import com.appsdeveloperblog.core.dto.commands.*;
 import com.appsdeveloperblog.core.dto.events.*;
 import com.appsdeveloperblog.orders.service.OrderService;
-import org.junit.jupiter.api.BeforeAll;
+import com.appsdeveloperblog.orders.utils.KafkaAwareIntegrationTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.DockerComposeContainer;
 
-import java.io.File;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -26,25 +19,7 @@ import static org.mockito.Mockito.*;
  * Integration tests for {@link CreateOrderSaga}
  */
 @SpringBootTest
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-class CreateOrderSagaTest {
-    public static final String DOCKER_COMPOSE_FILE_PATH = "src/test/resources/docker/docker-compose.yml";
-    @SpyBean
-    private KafkaTemplate<String, Object> kafkaTemplate;
-    @Value("${products.commands.topic.name}")
-    private String productsCommandsTopicName;
-    @Value("${payments.commands.topic.name}")
-    private String paymentsCommandsTopicName;
-    @Value("${shipments.commands.topic.name}")
-    private String shipmentsCommandsTopicName;
-    @Value("${orders.commands.topic.name}")
-    private String ordersCommandsTopicName;
-    @Value("${payments.events.topic.name}")
-    private String paymentsEventsTopicName;
-    @Value("${products.events.topic.name}")
-    private String productsEventsTopicName;
-    @Value("${shipments.events.topic.name}")
-    private String shipmentsEventsTopicName;
+class CreateOrderSagaTest extends KafkaAwareIntegrationTest {
     @SpyBean
     private CreateOrderSaga createOrderSaga;
     @Autowired
@@ -53,29 +28,6 @@ class CreateOrderSagaTest {
     private final UUID paymentId = UUID.randomUUID();
     private final UUID orderId = UUID.randomUUID();
     private final UUID customerId = UUID.randomUUID();
-
-    public static DockerComposeContainer environment = new DockerComposeContainer(new File(DOCKER_COMPOSE_FILE_PATH))
-            .withExposedService("kafka-1", 9091)
-            .withExposedService("kafka-2", 9092)
-            .withExposedService("kafka-3", 9093);
-
-    @BeforeAll
-    static void setUp() {
-        environment.start();
-    }
-
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        UUID uuid = UUID.randomUUID();
-        registry.add("orders.events.topic.name", () -> "orders-events-" + uuid);
-        registry.add("orders.commands.topic.name", () -> "orders-commands-" + uuid);
-        registry.add("products.events.topic.name", () -> "products-events-" + uuid);
-        registry.add("products.commands.topic.name", () -> "products-commands-" + uuid);
-        registry.add("payments.events.topic.name", () -> "payments-events-" + uuid);
-        registry.add("payments.commands.topic.name", () -> "payments-commands-" + uuid);
-        registry.add("shipments.events.topic.name", () -> "shipments-events-" + uuid);
-        registry.add("shipments.commands.topic.name", () -> "shipments-commands-" + uuid);
-    }
 
     @Test
     public void testSagaHappyPath() {
