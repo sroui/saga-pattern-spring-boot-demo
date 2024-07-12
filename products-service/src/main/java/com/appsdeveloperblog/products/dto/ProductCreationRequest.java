@@ -13,6 +13,7 @@ public class ProductCreationRequest {
     @Positive
     private BigDecimal price;
     @Positive
+    @NotNull
     private Integer quantity;
 
     public ProductCreationRequest(String name, BigDecimal price, Integer quantity) {
