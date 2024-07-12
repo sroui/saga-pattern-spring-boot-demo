@@ -1,10 +1,7 @@
 package com.appsdeveloperblog.orders.dao.jpa.entity;
 
 import com.appsdeveloperblog.core.types.OrderStatus;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 
@@ -12,6 +9,7 @@ import java.util.UUID;
 @Entity
 public class OrderEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(name = "status")
     private OrderStatus status;
