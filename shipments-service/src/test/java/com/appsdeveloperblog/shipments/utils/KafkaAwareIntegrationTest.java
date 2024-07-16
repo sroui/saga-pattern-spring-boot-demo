@@ -17,9 +17,9 @@ public abstract class KafkaAwareIntegrationTest {
     public static final String DOCKER_COMPOSE_FILE_PATH = "src/test/resources/docker/docker-compose.yml";
 
     public static DockerComposeContainer<?> environment = new DockerComposeContainer<>(new File(DOCKER_COMPOSE_FILE_PATH))
-            .withExposedService("kafka-1", 9091)
-            .withExposedService("kafka-2", 9092)
-            .withExposedService("kafka-3", 9093);
+            .withExposedService("kafka-1", 9291)
+            .withExposedService("kafka-2", 9292)
+            .withExposedService("kafka-3", 9293);
 
     @SpyBean
     protected KafkaTemplate<String, Object> kafkaTemplate;
@@ -55,5 +55,6 @@ public abstract class KafkaAwareIntegrationTest {
         registry.add("shipments.events.topic.name", () -> "shipments-events-" + uuid);
         registry.add("shipments.commands.topic.name", () -> "shipments-commands-" + uuid);
         registry.add("spring.kafka.admin.auto-create", () -> "true");
+        registry.add("spring.kafka.bootstrap-servers", () -> "localhost:9291,localhost:9292,localhost:9293");
     }
 }
