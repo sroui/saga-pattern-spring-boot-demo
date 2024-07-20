@@ -7,7 +7,7 @@
     <packaging>pom</packaging>
     <name>Saga Orchestration Pattern Demo</name>
     <description>Saga Orchestration Pattern Spring Boot Demo</description>
-    <version>${revision}</version>
+    <version>1.0.0</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -25,7 +25,6 @@
     </modules>
 
     <properties>
-        <revision>1.0.0</revision>
         <java.version>17</java.version>
     </properties>
 
@@ -44,31 +43,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-                <configuration>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>
